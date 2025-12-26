@@ -33,7 +33,7 @@ const jobs = [
         //Services at this location
         services: [jobTypes.MOWING] 
         
-        //Estimared toral time on-site (minutes)
+        //Estimated toral time on-site (minutes)
         servicesDurationMinutes: "15",  //Time duration per service. will update based on activity.
         
         subscriptionType: "Recurring",
@@ -50,7 +50,7 @@ const jobs = [
         //Services at this location
         services: [jobTypes.MOWING],
         
-        //Estimared toral time on-site (minutes)
+        //Estimated toral time on-site (minutes)
         servicesDurationMinutes: "30",
 
         subscriptionType: "Pending",
@@ -67,7 +67,7 @@ const jobs = [
         //Services at this location
         services: [jobTypes.MOWING, jobtypes.BUSHES],
         
-        //Estimared toral time on-site (minutes)
+        //Estimated toral time on-site (minutes)
         servicesDurationMinutes: "30",
 
         subscriptionType: "Pending",
