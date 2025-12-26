@@ -28,9 +28,14 @@ const jobs = [
     {
         id: 1
         customerName: "Sanja Kosak",
-        jobType: "Mowing",
         address: "4108 Piney Branch Court",
-        serviceDuration: "15",  //Time duration per service. will update based on activity.
+        
+        //Services at this location
+        services: [jobTypes.MOWING] 
+        
+        //Estimared toral time on-site (minutes)
+        servicesDurationMinutes: "15",  //Time duration per service. will update based on activity.
+        
         subscriptionType: "Recurring",
         subscriptionStatus: "Pending",  //Pending | Active | Inactive | One-Time(changes to inactive after complete)
         frequency: "Auto-Seasonal",  //refers to mowingCycles rules
@@ -40,9 +45,31 @@ const jobs = [
     {
         id: 2
         customerName: "Donny Almonte",
-        jobType: "Mowing",
+        address: "2708 Chelton Rd",
+        
+        //Services at this location
+        services: [jobTypes.MOWING],
+        
+        //Estimared toral time on-site (minutes)
+        servicesDurationMinutes: "30",
+
+        subscriptionType: "Pending",
+        subscriptionStatus: "Pending",
+        frequency: "Auto-Seasonal",
+        scheduleDate: "2026-01-05",
+        lastCompleteDate: null
+    },
+    {
+        id: 3
+        customerName: "Donny Almonte",
         address: "2582 Alexia Circle",
-        serviceDuration: "30",
+        
+        //Services at this location
+        services: [jobTypes.MOWING, jobtypes.BUSHES],
+        
+        //Estimared toral time on-site (minutes)
+        servicesDurationMinutes: "30",
+
         subscriptionType: "Pending",
         subscriptionStatus: "Pending",
         frequency: "Auto-Seasonal",
