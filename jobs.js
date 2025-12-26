@@ -26,7 +26,7 @@ const jobTypes = Object.freeze({
 //This is our "database" for now
 const jobs = [
     {
-        id: 1
+        id: 1,
         customerName: "Sanja Kosak",
         address: "4108 Piney Branch Court",
         
@@ -43,7 +43,7 @@ const jobs = [
         lastCompletedDate: null
     },
     {
-        id: 2
+        id: 2,
         customerName: "Donny Almonte",
         address: "2708 Chelton Rd",
         
@@ -60,7 +60,7 @@ const jobs = [
         lastCompletedDate: null
     },
     {
-        id: 3
+        id: 3,
         customerName: "Donny Almonte",
         address: "2582 Alexia Circle",
         
