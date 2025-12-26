@@ -31,7 +31,7 @@ const jobs = [
         address: "4108 Piney Branch Court",
         
         //Services at this location
-        services: [jobTypes.MOWING] 
+        services: [jobTypes.MOWING], 
         
         //Estimated toral time on-site (minutes)
         servicesDurationMinutes: "15",  //Time duration per service. will update based on activity.
