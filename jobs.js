@@ -25,7 +25,7 @@ const jobs = [
         jobType: "Mowing",
         address: "4108 Piney Branch Court",
         subscriptionType: "Recurring"
-        subscriptionStatus: "Pending",  //Pending | Active | Inactive | On-Time(changes to inactive after complete)
+        subscriptionStatus: "Pending",  //Pending | Active | Inactive | One-Time(changes to inactive after complete)
         frequency: "Auto-Seasonal",  //refers to mowingCycles rules
         scheduledDate: "2026-01-05",
         lastCompletedDate: null
