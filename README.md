@@ -13,223 +13,275 @@ You’ll use:
 - Vanilla JavaScript for initial logic
 - React for component-based UI
 - TypeScript with React for safer, scalable code
-- No backend at first (just in-memory arrays, then localStorage)
+- No backend at first (in-memory arrays → localStorage)
+- Later: Node.js API + Postgres (security-first)
 
-
-STAGE 1 — BASIC JOB LIST (JavaScript only)
+------------------------------------------------
+STAGE 1 — BASIC JOB LIST (Vanilla JS)
 ------------------------------------------------
 Objective:
-Get comfortable with JavaScript fundamentals and DOM manipulation.
+Learn JavaScript fundamentals and DOM manipulation.
 
 Features:
-1. Hardcode an array of job objects in a JS file, e.g.:
+1. Hardcode an array of job objects:
    - id
    - customerName
-   - jobType (e.g., "Mowing", "Clean-up", "Pavers")
-   - address (string for now)
-   - status ("Pending", "In Progress", "Done")
-   - scheduledDate (string like "2025-01-10")
+   - jobType ("Mowing" | "Clean-up" | "Pavers")
+   - address
+   - status ("Pending" | "In Progress" | "Done")
+   - scheduledDate (string)
 
 2. On page load:
-   - Render all jobs into an HTML list or table.
-   - Each row shows customerName, jobType, status, scheduledDate.
+   - Render all jobs in a table or list.
+   - Show customerName, jobType, status, scheduledDate.
 
 3. Filters:
-   - Add a dropdown to filter jobs by:
-     - status
-     - jobType
-   - When user changes the dropdown, update the displayed list.
+   - Dropdown filter by status
+   - Dropdown filter by jobType
+   - Re-render on change
 
-4. Basic interactions:
-   - Add a button on each job: [Mark as Done]
-   - Clicking it updates the job’s status in your JS array and re-renders the list.
+4. Basic interaction:
+   - [Mark as Done] button
+   - Updates job status and re-renders
 
 What you’ll practice:
 - Arrays, objects
-- forEach / map / filter
-- Basic DOM manipulation (querySelector, addEventListener, innerHTML)
-- Thinking in “data first, then UI”
+- map / filter / forEach
+- querySelector / addEventListener
+- Data-first thinking
 
+------------------------------------------------
+STAGE 1 — PART 2 (STRUCTURE & HYGIENE)
+------------------------------------------------
+Add:
+- Single renderJobs(jobs) function
+- No duplicated DOM logic
+- Small utilities (formatDate, normalizeStatus)
+- Clear separation:
+  - data
+  - render
+  - event handlers
 
-STAGE 2 — JOB CREATION FORM (JavaScript + DOM)
+------------------------------------------------
+STAGE 2 — JOB CREATION FORM (Vanilla JS)
 ------------------------------------------------
 Objective:
-Practice working with forms, events, and validation.
+Work with forms, events, and validation.
 
 Features:
-1. Add a simple HTML form:
-   - customerName (text)
-   - jobType (dropdown)
-   - address (text)
-   - scheduledDate (date input)
+1. HTML form:
+   - customerName
+   - jobType
+   - address
+   - scheduledDate
+
 2. On submit:
-   - Prevent page reload.
-   - Create a new job object with status = "Pending".
-   - Add it to your jobs array and re-render the list.
-3. Basic validation:
-   - Required: customerName, jobType, scheduledDate.
-   - If missing, show a simple error message.
+   - preventDefault()
+   - Create new job (status = "Pending")
+   - Push into jobs array
+   - Re-render list
+
+3. Basic validation (UX only):
+   - Required fields
+   - Simple error messages
 
 What you’ll practice:
-- Form handling (submit event, preventDefault)
-- Simple validation logic
-- Updating arrays and re-rendering
+- Form events
+- Validation logic
+- Updating state + UI
 
-
-STAGE 3 — LOCALSTORAGE PERSISTENCE (JavaScript)
+------------------------------------------------
+STAGE 3 — LOCALSTORAGE PERSISTENCE
 ------------------------------------------------
 Objective:
-Introduce basic “fake database” using localStorage.
+Introduce persistent app state.
 
 Features:
-1. When the jobs array changes:
-   - Save the jobs array to localStorage as JSON.
-2. On page load:
-   - If localStorage has jobs, load them instead of hardcoding only.
-3. Add a "Reset Data" button:
-   - Clears localStorage and reloads default sample jobs.
+1. Save jobs to localStorage on change
+2. Load jobs from localStorage on page load
+3. "Reset Data" button
 
-What you’ll practice:
-- JSON.stringify / JSON.parse
-- State that survives refresh
-- Thinking “app data lives somewhere”
+New habit:
+- Use wrapper functions:
+  - loadJobs()
+  - saveJobs(jobs)
 
-
-STAGE 4 — TYPE ANNOTATIONS PLANNING (TS PREP, NO TS YET)
+------------------------------------------------
+STAGE 4 — TYPE PLANNING (TS PREP)
 ------------------------------------------------
 Objective:
-Prepare your brain for TypeScript by thinking in “types” while still writing JS.
+Think in types before writing TypeScript.
 
-Activities:
-1. On paper or in comments, define what a Job looks like:
-   Job {
-     id: number;
-     customerName: string;
-     jobType: "Mowing" | "Clean-up" | "Pavers" | "Other";
-     address: string;
-     status: "Pending" | "In Progress" | "Done";
-     scheduledDate: string;
-   }
+Define (in comments or notes):
+Job {
+  id: number;
+  customerName: string;
+  jobType: "Mowing" | "Clean-up" | "Pavers" | "Other";
+  address: string;
+  status: "Pending" | "In Progress" | "Done";
+  scheduledDate: string;
+}
 
-2. Go through your JS and:
-   - Treat fields consistently.
-   - Avoid “mystery” properties (no random job["foo"]).
+Rules:
+- No mystery properties
+- Consistent field usage
 
-Goal:
-Be ready to translate this mental model into real TypeScript types.
-
-
-STAGE 5 — (OPTIONAL) VANILLA TYPESCRIPT VERSION
+------------------------------------------------
+STAGE 5 — OPTIONAL VANILLA TYPESCRIPT
 ------------------------------------------------
 Objective:
-If you want, rebuild the same app with plain TypeScript + DOM (no React yet).
-
-Steps:
-1. Set up a tiny TS project:
-   - index.html
-   - src/main.ts
-   - tsconfig.json
-2. Define:
-   - type JobStatus
-   - type JobType
-   - interface Job
-3. Port your JS logic to TS:
-   - let jobs: Job[] = [];
-   - function renderJobs(jobsToRender: Job[]): void { ... }
-4. Compile with tsc and load the output JS in index.html.
-
-This is optional because you’ll get even more TS practice in React later.
-
-
-STAGE 6 — REACT VERSION (JAVASCRIPT)
-------------------------------------------------
-Objective:
-Rebuild the same UI using React (JS only) to learn components and state.
+Practice TypeScript without React.
 
 Setup:
-- Use Vite or Create React App with JavaScript template.
+- index.html
+- src/main.ts
+- tsconfig.json
 
-Features:
-1. Components:
-   - <App />
-   - <JobList />
-   - <JobFilters />
-   - <JobForm />
-2. Keep the same features as Stages 1–3:
-   - Show list of jobs
-   - Filter by status/jobType
-   - Add new job via form
-   - Mark job as done
-   - (Optional) still use localStorage for persistence
+Add:
+- type JobStatus
+- type JobType
+- interface Job
 
-What you’ll practice:
-- React components
-- props + state
-- Controlled form inputs
-- Lifting state up (App holds jobs array, children read/change it)
+Port logic from JS → TS
+Compile with tsc
 
-
-STAGE 7 — REACT + TYPESCRIPT VERSION
+------------------------------------------------
+STAGE 6 — REACT VERSION (JavaScript)
 ------------------------------------------------
 Objective:
-Upgrade your React app to use TypeScript for safer, clearer code.
+Learn component-based UI.
 
-Steps:
-1. Create a new React+TS app (or convert the existing one):
-   - Use Vite or CRA with TypeScript template.
-2. Define types:
-   - type JobStatus
-   - type JobType
-   - interface Job
-3. Type your components:
-   - type JobListProps = { jobs: Job[]; ... };
-   - function JobList(props: JobListProps) { ... }
-4. Fix TS errors as guidance:
-   - Make sure you type state, props, and event handlers.
+Setup:
+- Vite or CRA (JavaScript template)
 
-What you’ll practice:
-- TS in a real UI
-- Typing props & state
-- Letting the compiler catch mistakes early
+Components:
+- App
+- JobList
+- JobFilters
+- JobForm
 
+Features:
+- Same behavior as Stages 1–3
+- localStorage persistence (optional)
 
-OPTIONAL VARIATION — FORENSOLEDGER FLAVOR
+New habit:
+- jobService.js
+  - getJobs()
+  - createJob()
+  - updateJob()
+(Initially uses localStorage)
+
 ------------------------------------------------
-Once you’re comfortable:
-
-Create a parallel version where:
-- “Jobs” become “Transactions”
-
-Fields might be:
-- id
-- caseNumber
-- payee (person or informant code)
-- amount
-- currency ("USD", "Cash App", "Crypto")
-- direction ("Debit" | "Credit")
-- status ("Pending Approval" | "Approved" | "Rejected")
-- date
-
-Use:
-- same list rendering
-- same filters
-- same localStorage idea
-- same React + TS patterns
-
-This will feel very close to a future ForensoLedger frontend.
-
-
-FOCUS GUIDANCE
+STAGE 7 — REACT + TYPESCRIPT
 ------------------------------------------------
-- Don’t worry about looking pretty; focus on **data + logic + components**.
-- Use vanilla JS to understand DOM and core language.
-- Use React to structure UI into components.
-- Use TypeScript last to harden everything.
+Objective:
+Harden the app with TypeScript.
 
-End result:
-You’ll have:
-- a vanilla JS app,
-- a React JS app,
-- and a React + TypeScript app
+Setup:
+- React + TS template
 
-…all using the **same SunnyRoute-style domain model** you’re already building.
+Add:
+- Shared types folder (/src/types/job.ts)
+- Typed props, state, and events
+
+Fix compiler errors as guidance.
+
+------------------------------------------------
+STAGE 8 — NODE API (NO DB YET)
+------------------------------------------------
+Objective:
+Learn backend fundamentals + security.
+
+Stack:
+- Node.js
+- Express
+
+Endpoints:
+- GET /api/jobs
+- POST /api/jobs
+- PATCH /api/jobs/:id
+
+Security from day one:
+- Zod validation (reject unknown fields)
+- Central error handler
+- Helmet
+- Rate limiting
+- Locked CORS
+- Request size limits
+
+Storage:
+- In-memory array on server
+
+------------------------------------------------
+STAGE 9 — AUTH + RBAC
+------------------------------------------------
+Objective:
+Prevent broken access control.
+
+Add:
+- Cookie-based sessions (HttpOnly, Secure)
+- Roles:
+  - worker
+  - manager
+  - admin
+
+Rules enforced server-side only.
+
+------------------------------------------------
+STAGE 10 — POSTGRES + PRISMA
+------------------------------------------------
+Objective:
+Persist data safely.
+
+Add:
+- Postgres
+- Prisma ORM
+- Migrations
+
+Security rules:
+- DB not public
+- Least-privileged DB user
+- No raw SQL yet
+
+------------------------------------------------
+STAGE 11 — PRODUCTION HARDENING
+------------------------------------------------
+Add:
+- Audit logging
+- Stricter rate limits for auth
+- Env-based secrets
+- Dependency scanning
+
+------------------------------------------------
+STAGE 12 — DEPLOYMENT
+------------------------------------------------
+Frontend:
+- Vercel / Netlify
+
+Backend:
+- Render / Fly / AWS
+
+Database:
+- Managed Postgres (Supabase / Neon / RDS)
+
+Requirements:
+- HTTPS only
+- Secure cookies
+- DB inaccessible from public internet
+
+------------------------------------------------
+OPTIONAL — FORENSOLEDGER FLAVOR
+------------------------------------------------
+Swap "Jobs" → "Transactions"
+Reuse:
+- UI patterns
+- RBAC
+- Validation
+- API structure
+
+END RESULT:
+- Vanilla JS app
+- React JS app
+- React + TS app
+- Secure Node + Postgres API
+- Real SaaS-grade learning foundation
