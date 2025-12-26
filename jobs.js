@@ -12,7 +12,7 @@ const mowingCycles = {
     fallWinter: {
         label: "Fall/Winter",
         months: ["November", "December", "January", "February"],
-        defaultFrequency: "biweekly" //can be overwritten to monthly
+        defaultFrequency: "Biweekly" //can be overwritten to monthly
         },
     };
 
@@ -53,11 +53,11 @@ const jobs = [
         //Estimated toral time on-site (minutes)
         servicesDurationMinutes: "30",
 
-        subscriptionType: "Pending",
+        subscriptionType: "Recurring",
         subscriptionStatus: "Pending",
         frequency: "Auto-Seasonal",
-        scheduleDate: "2026-01-05",
-        lastCompleteDate: null
+        scheduledDate: "2026-01-05",
+        lastCompletedDate: null
     },
     {
         id: 3
@@ -65,16 +65,16 @@ const jobs = [
         address: "2582 Alexia Circle",
         
         //Services at this location
-        services: [jobTypes.MOWING, jobtypes.BUSHES],
+        services: [jobTypes.MOWING, jobTypes.BUSHES],
         
         //Estimated toral time on-site (minutes)
         servicesDurationMinutes: "30",
 
-        subscriptionType: "Pending",
+        subscriptionType: "Recurring",
         subscriptionStatus: "Pending",
         frequency: "Auto-Seasonal",
-        scheduleDate: "2026-01-05",
-        lastCompleteDate: null
+        scheduledDate: "2026-01-05",
+        lastCompletedDate: null
     }
 ];
 
