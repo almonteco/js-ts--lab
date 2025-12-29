@@ -1,287 +1,181 @@
-TITLE: "Job Board & Simple Scheduler" (SunnyRoute-flavored Mini Project)
+# Job Board & Simple Scheduler  
+### (SunnyRoute-flavored Mini Project)
 
-GOAL:
-Build a small, browser-based app using:
-- Vanilla JavaScript first
-- Then React
-- Then React with TypeScript
+> A data-first, framework-free project to learn how real frontend systems work  
+> before introducing React, TypeScript, or backend complexity.
 
-Use case: tiny offline SunnyRoute prototype.
+---
 
-You’ll use:
-- HTML + CSS for layout
-- Vanilla JavaScript for initial logic
-- React for component-based UI
-- TypeScript with React for safer, scalable code
-- No backend at first (in-memory arrays → localStorage)
-- Later: Node.js API + Postgres (security-first)
+## Project Goal
 
-------------------------------------------------
-STAGE 1 — BASIC JOB LIST (Vanilla JS)
-------------------------------------------------
-Objective:
-Learn JavaScript fundamentals and DOM manipulation.
+Build a small “Job Board & Scheduler” that models real SunnyRoute-style work:
+- recurring service jobs
+- filtering by service and status
+- marking jobs as completed
+- rendering UI purely from data
 
-Features:
-1. Hardcode an array of job objects:
-   - id
-   - customerName
-   - jobType ("Mowing" | "Clean-up" | "Pavers")
-   - address
-   - status ("Pending" | "In Progress" | "Done")
-   - scheduledDate (string)
+The focus is **thinking correctly**, not building features quickly.
 
-2. On page load:
-   - Render all jobs in a table or list.
-   - Show customerName, jobType, status, scheduledDate.
+---
 
-3. Filters:
-   - Dropdown filter by status
-   - Dropdown filter by jobType
-   - Re-render on change
+## Learning Philosophy
 
-4. Basic interaction:
-   - [Mark as Done] button
-   - Updates job status and re-renders
+This project is built using these rules:
 
-What you’ll practice:
-- Arrays, objects
-- map / filter / forEach
-- querySelector / addEventListener
-- Data-first thinking
+1. **Data is the source of truth**
+2. **UI is a pure reflection of data**
+3. **Events update data, not the DOM**
+4. **Re-rendering is cheap and intentional**
+5. **Structure comes before features**
 
-------------------------------------------------
-STAGE 1 — PART 2 (STRUCTURE & HYGIENE)
-------------------------------------------------
-Add:
-- Single renderJobs(jobs) function
-- No duplicated DOM logic
-- Small utilities (formatDate, normalizeStatus)
-- Clear separation:
-  - data
-  - render
-  - event handlers
+This mirrors how React works — without React.
 
-------------------------------------------------
-STAGE 2 — JOB CREATION FORM (Vanilla JS)
-------------------------------------------------
-Objective:
-Work with forms, events, and validation.
+---
 
-Features:
-1. HTML form:
-   - customerName
-   - jobType
-   - address
-   - scheduledDate
+# STAGE 1 — CORE FOUNDATIONS
 
-2. On submit:
-   - preventDefault()
-   - Create new job (status = "Pending")
-   - Push into jobs array
-   - Re-render list
+## PART 1 — Data & Initial Render
 
-3. Basic validation (UX only):
-   - Required fields
-   - Simple error messages
+### What you build
+- A hardcoded list of jobs rendered to the page
 
-What you’ll practice:
-- Form events
-- Validation logic
-- Updating state + UI
+### Data model (in-memory)
+Each job contains:
 
-------------------------------------------------
-STAGE 3 — LOCALSTORAGE PERSISTENCE
-------------------------------------------------
-Objective:
-Introduce persistent app state.
+- `id: number`
+- `customerName: string`
+- `address: string`
+- `services: string[]`  
+  (e.g. `"Mowing"`, `"Bushes"`, `"Trees"`)
+- `servicesDurationMinutes: number`
+- `subscriptionType: string`
+- `subscriptionStatus: string`
+- `frequency: string`
+- `scheduledDate: string (YYYY-MM-DD)`
+- `lastCompletedDate: string | null`
 
-Features:
-1. Save jobs to localStorage on change
-2. Load jobs from localStorage on page load
-3. "Reset Data" button
+### Concepts practiced
+- Arrays of objects
+- Single source of truth
+- Rendering lists from data
+- Basic DOM creation (`createElement`, `innerHTML`)
 
-New habit:
-- Use wrapper functions:
-  - loadJobs()
-  - saveJobs(jobs)
+---
 
-------------------------------------------------
-STAGE 4 — TYPE PLANNING (TS PREP)
-------------------------------------------------
-Objective:
-Think in types before writing TypeScript.
+## PART 2 — Structure & Hygiene
 
-Define (in comments or notes):
-Job {
-  id: number;
-  customerName: string;
-  jobType: "Mowing" | "Clean-up" | "Pavers" | "Other";
-  address: string;
-  status: "Pending" | "In Progress" | "Done";
-  scheduledDate: string;
-}
+### What you refactor
+Organize the file into clear sections:
 
-Rules:
-- No mystery properties
-- Consistent field usage
+- CONFIG / CONSTANTS
+- DATA (in-memory database)
+- PURE HELPERS (no DOM, no state)
+- STATE MUTATION FUNCTIONS
+- RENDER FUNCTIONS (DOM only)
+- FILTERING / INTERACTION LOGIC
+- STARTUP / BOOTSTRAP
 
-------------------------------------------------
-STAGE 5 — OPTIONAL VANILLA TYPESCRIPT
-------------------------------------------------
-Objective:
-Practice TypeScript without React.
+### Concepts practiced
+- Separation of concerns
+- Pure vs impure functions
+- Readability and maintainability
+- Proper use of `const` vs `let`
 
-Setup:
-- index.html
-- src/main.ts
-- tsconfig.json
+---
 
-Add:
-- type JobStatus
-- type JobType
-- interface Job
+## PART 3 — Filtering
 
-Port logic from JS → TS
-Compile with tsc
+### What you add
+- Status filter dropdown
+- Service type filter dropdown
 
-------------------------------------------------
-STAGE 6 — REACT VERSION (JavaScript)
-------------------------------------------------
-Objective:
-Learn component-based UI.
+### Behavior
+- Filters read values from the DOM
+- Jobs are filtered using array methods
+- Filtered jobs are passed into the render function
 
-Setup:
-- Vite or CRA (JavaScript template)
+### Concepts practiced
+- `filter`
+- Chaining data transformations
+- Derived data vs stored state
+- Re-rendering based on filters
 
-Components:
-- App
-- JobList
-- JobFilters
-- JobForm
+---
 
-Features:
-- Same behavior as Stages 1–3
-- localStorage persistence (optional)
+## PART 4 — Basic Interaction (Mark as Done)
 
-New habit:
-- jobService.js
-  - getJobs()
-  - createJob()
-  - updateJob()
-(Initially uses localStorage)
+### What you add
+- A **“Mark as Done”** button for each job
+- Completion status shown in the UI
 
-------------------------------------------------
-STAGE 7 — REACT + TYPESCRIPT
-------------------------------------------------
-Objective:
-Harden the app with TypeScript.
+### Behavior
+- Clicking the button:
+  - Identifies the job using `data-id`
+  - Updates job data (`lastCompletedDate`)
+  - Re-renders using current filters
+- Completed jobs:
+  - Show a completion indicator
+  - Have their button disabled
 
-Setup:
-- React + TS template
+### Concepts practiced
+- Event delegation (single listener on the list)
+- `data-*` attributes and `dataset`
+- `closest("button")`
+- Immutable state updates (`map` + object spread)
+- Event → data update → re-render loop
+- UI as a pure reflection of state
 
-Add:
-- Shared types folder (/src/types/job.ts)
-- Typed props, state, and events
+---
 
-Fix compiler errors as guidance.
+## End-of-Stage Mental Model
 
-------------------------------------------------
-STAGE 8 — NODE API (NO DB YET)
-------------------------------------------------
-Objective:
-Learn backend fundamentals + security.
+```
 
-Stack:
-- Node.js
-- Express
+User action
+↓
+Event handler
+↓
+Update data
+↓
+Derive new view
+↓
+Render UI
 
-Endpoints:
-- GET /api/jobs
-- POST /api/jobs
-- PATCH /api/jobs/:id
+```
 
-Security from day one:
-- Zod validation (reject unknown fields)
-- Central error handler
-- Helmet
-- Rate limiting
-- Locked CORS
-- Request size limits
+This is the exact mental model used by React and modern frontend frameworks.
 
-Storage:
-- In-memory array on server
+---
 
-------------------------------------------------
-STAGE 9 — AUTH + RBAC
-------------------------------------------------
-Objective:
-Prevent broken access control.
+# STAGE 2 — PERSISTENCE & REALISM (NEXT)
 
-Add:
-- Cookie-based sessions (HttpOnly, Secure)
-- Roles:
-  - worker
-  - manager
-  - admin
+*(Planned, not yet built)*
 
-Rules enforced server-side only.
+- Save jobs to `localStorage`
+- Load jobs on page refresh
+- Separate “completed” vs “scheduled” views
+- Prepare data shape for backend storage
 
-------------------------------------------------
-STAGE 10 — POSTGRES + PRISMA
-------------------------------------------------
-Objective:
-Persist data safely.
+---
 
-Add:
-- Postgres
-- Prisma ORM
-- Migrations
+# STAGE 3 — FRAMEWORK MIGRATION (FUTURE)
 
-Security rules:
-- DB not public
-- Least-privileged DB user
-- No raw SQL yet
+*(Same logic, new tools)*
 
-------------------------------------------------
-STAGE 11 — PRODUCTION HARDENING
-------------------------------------------------
-Add:
-- Audit logging
-- Stricter rate limits for auth
-- Env-based secrets
-- Dependency scanning
+- Convert render logic to React
+- Replace `jobs` with `useState`
+- Introduce TypeScript types
+- Keep the same data-first structure
 
-------------------------------------------------
-STAGE 12 — DEPLOYMENT
-------------------------------------------------
-Frontend:
-- Vercel / Netlify
+---
 
-Backend:
-- Render / Fly / AWS
+## Project Outcome
 
-Database:
-- Managed Postgres (Supabase / Neon / RDS)
+By completing this project as structured:
 
-Requirements:
-- HTTPS only
-- Secure cookies
-- DB inaccessible from public internet
+- You understand frontend state deeply
+- You can debug UI bugs logically
+- You won’t “fight” React later
+- You build confidence through correctness, not magic
 
-------------------------------------------------
-OPTIONAL — FORENSOLEDGER FLAVOR
-------------------------------------------------
-Swap "Jobs" → "Transactions"
-Reuse:
-- UI patterns
-- RBAC
-- Validation
-- API structure
-
-END RESULT:
-- Vanilla JS app
-- React JS app
-- React + TS app
-- Secure Node + Postgres API
-- Real SaaS-grade learning foundation
+This is not a toy project — it’s a **foundation project**.
