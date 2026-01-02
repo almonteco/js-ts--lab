@@ -1,0 +1,261 @@
+# OPS_README.md  
+Operational guide for running, monitoring, and supporting this application.  
+This document is meant to be practical and calm — something you can grab during an issue and immediately know what to do.
+
+---
+
+## 1. Environments
+
+This project is expected to have three logical environments:
+
+- Development (local work and experiments)
+- Staging (production-like testing)
+- Production (customer-facing)
+
+Each environment should have:
+
+- its own database
+- its own secrets
+- its own URLs
+- its own logging and monitoring views
+
+Never share credentials or databases across environments.
+
+---
+
+## 2. How to Deploy
+
+### Production deployment (high-level flow)
+
+1. Commit to main branch
+2. CI builds and runs tests
+3. If staging succeeds, promote to production
+4. Watch logs for the first 10–15 minutes
+
+Platform examples:
+
+- If using Vercel: main → preview → production promotion
+- If using Render/Fly/Railway: main triggers deployment
+
+All deployments should be:
+
+- reproducible
+- automated
+- documented here
+
+Add platform-specific commands below:
+
+Deployment steps for this app:
+	1.	
+	2.	
+	3.	
+
+---
+
+## 3. How to Roll Back
+
+Assume someday a deployment will misbehave. The rollback path should be clear and boring.
+
+Examples depending on platform:
+
+- Revert to previous deployment in dashboard
+- Re-deploy last known good image
+- Git revert last commit and redeploy
+
+Write the real process here:
+
+Rollback steps:
+	1.	
+	2.	
+	3.	
+
+If the database schema changed, note if rollback requires:
+
+- backward-compatible migrations
+- manual intervention
+- feature flag disablement
+
+---
+
+## 4. Logs, Metrics, and Where to Look First
+
+When something goes wrong, you should not be guessing where to look.
+
+Document the locations:
+
+- Application logs:
+  - URL:
+- Database logs:
+  - URL:
+- Error tracking:
+  - URL:
+- Metrics dashboard:
+  - URL:
+- Status page:
+  - URL:
+
+Requests should ideally have:
+
+- request ID
+- user ID (if authenticated)
+- organization/tenant ID
+- route or operation name
+
+When a user reports a problem, search logs by:
+
+- time window
+- email / user ID
+- given request ID or error code
+
+---
+
+## 5. Common Operational Tasks
+
+### Restarting the app
+When necessary, document how:
+
+Restart steps:
+	1.	
+	2.	
+	3.	
+
+### Running migrations
+Prisma example:
+
+npx prisma migrate deploy
+
+Make sure:
+
+- migrations are applied in staging first
+- backups exist for production
+
+---
+
+## 6. Database Operations
+
+This app uses PostgreSQL with Prisma.
+
+Basic operational notes:
+
+- Do not query production DB directly unless absolutely necessary
+- Prefer read-only connections when investigating
+- Avoid exporting sensitive data unnecessarily
+
+Backups:
+
+- Automatic backups should be enabled
+- Document retention length
+- Note where they live and how to restore
+
+Write the specifics here:
+
+Backup location:
+Retention:
+Restore process link/notes:
+
+---
+
+## 7. Background Jobs and Scheduled Tasks
+
+If background workers or cron jobs exist:
+
+- describe what they do
+- where they run
+- what happens if they fail
+
+Also include:
+
+- where failed jobs are visible
+- retry behavior
+- how to clear/repair stuck jobs
+
+---
+
+## 8. Health Checks and Monitoring
+
+The app should have:
+
+- health endpoint or platform-level health status
+- uptime monitoring
+- alerts for major issues
+
+Document:
+
+- health check URL(s)
+- which metrics are watched
+- who gets alerts and where (email, Slack, SMS)
+
+Health endpoint(s):
+Status page:
+Alert destination:
+
+---
+
+## 9. Incident Response (Lightweight)
+
+When an incident occurs:
+
+1) Acknowledge it
+2) Update the status page if customer-facing
+3) Capture basic notes while fresh
+4) Fix or mitigate
+5) Add short post-incident summary
+
+Post-incident notes should include:
+
+- What happened
+- User impact
+- Root cause (as best as known)
+- Fix applied
+- Follow-up action items
+
+Keep it short but honest.
+
+---
+
+## 10. Support and User Assistance
+
+If a user reports a problem, try to collect:
+
+- timestamp or rough window
+- their email or user ID
+- what they were trying to do
+- screenshot if available
+- any error or request ID they saw
+
+Helpful app features (if implemented):
+
+- impersonate user safely
+- admin panel to view recent errors
+- per-tenant feature flags
+
+Always avoid:
+
+- asking for passwords
+- sending sensitive logs via email
+- exposing other users' data while debugging
+
+---
+
+## 11. Security and Reliability Checklists
+
+This project also includes:
+
+- `SECURITY_CHECKLIST.md`
+- `RELIABILITY_CHECKLIST.md`
+
+Before major releases, review both documents intentionally.
+
+They exist to make problems less likely and recovery faster when something does happen.
+
+---
+
+## 12. Philosophy
+
+The goal of this operational guide is simple:
+
+- keep customers calm
+- keep you calm
+- turn surprises into routine steps
+
+A small amount of structure here saves a huge amount of pain later. This file should evolve as the system grows. Treat it as a living field manual rather than a static document.
