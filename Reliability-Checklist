@@ -1,0 +1,142 @@
+# RELIABILITY_CHECKLIST.md  
+Baseline reliability checklist for TypeScript + Next.js + PostgreSQL + Prisma SaaS apps.  
+Use this to review before major releases and when tightening SLAs.
+
+---
+
+## 1. Architecture & Service Boundaries
+
+- [ ] Core services are clearly defined (API, frontend, background jobs, DB, third-party integrations).
+- [ ] No single “god service” that everything depends on unnecessarily.
+- [ ] Components that scale differently (API vs workers vs DB) can be scaled independently.
+- [ ] Critical paths (login, dashboard load, main workflows) are mapped and understood.
+- [ ] Non-essential features do not block essential flows when they fail.
+
+---
+
+## 2. Error Handling & Timeouts
+
+- [ ] Every outbound call (HTTP, DB, queue, cache) has a timeout configured.
+- [ ] Network errors and timeouts are caught and handled gracefully.
+- [ ] Users see a clear, friendly error state instead of a blank page or raw stack trace.
+- [ ] Known failure modes have specific handling (e.g., third-party outage vs user error).
+- [ ] Retries use backoff and are bounded (no infinite retry loops).
+- [ ] Background jobs handle partial failures and re-queue safely where needed.
+
+---
+
+## 3. Database Reliability & Data Integrity
+
+- [ ] Prisma migrations have been applied and tested in non-production environments.
+- [ ] Schema changes are backwards-compatible during rollout (no breaking existing clients).
+- [ ] Long-running or heavy queries are identified and optimized (indexes, pagination, etc.).
+- [ ] Critical writes use transactions when multiple tables must stay in sync.
+- [ ] Database connection pool settings are reasonable for the environment.
+- [ ] Read/write patterns are documented for high-throughput areas.
+
+---
+
+## 4. Background Jobs, Queues, and Scheduled Tasks
+
+- [ ] Worker processes are separate from the web tier when appropriate.
+- [ ] Queue behavior is understood (ordering, retries, dead-letter queues).
+- [ ] Failed jobs are visible somewhere (dashboard, logs, alerts).
+- [ ] Scheduled tasks (cron-like jobs) are idempotent and safe to run more than once.
+- [ ] No essential task is silently tied to a single ephemeral instance without safeguards.
+
+---
+
+## 5. Performance & Load Behavior
+
+- [ ] Key user journeys have basic performance budgets (page load, API latency).
+- [ ] API responses are reasonably sized (no unbounded payloads).
+- [ ] Heavy computations are moved off the critical request path where feasible.
+- [ ] Caching (HTTP, DB, or app-level) is used where it clearly improves reliability and latency.
+- [ ] Slow operations are paginated or chunked instead of loading everything at once.
+- [ ] Load tests or at least synthetic bursts have been used on critical endpoints when possible.
+
+---
+
+## 6. Deployments, Rollbacks, and Config
+
+- [ ] Deployment process is automated (CI/CD or equivalent).
+- [ ] Rollback strategy exists and is documented (how to revert a bad release quickly).
+- [ ] Environment variables and config are validated at startup (fail fast, clear errors).
+- [ ] Schema changes are deployed in a way that doesn’t break running code (or vice versa).
+- [ ] Feature flags are used to roll out risky features gradually when appropriate.
+
+---
+
+## 7. Observability: Logs, Metrics, and Traces
+
+- [ ] Application logs are structured enough for search and filtering.
+- [ ] Key business and technical metrics exist (e.g., login success, error rate, latency).
+- [ ] There is a way to correlate logs with user actions, requests, or jobs (request IDs, trace IDs).
+- [ ] Critical services expose basic health and readiness information.
+- [ ] Dashboards exist for:
+  - [ ] Error rates
+  - [ ] Latency
+  - [ ] Throughput
+  - [ ] Resource usage (CPU, memory, DB connections)
+- [ ] Alerting thresholds are configured for important metrics (not just default settings).
+
+---
+
+## 8. Resilience & Failure Scenarios
+
+- [ ] The system behaves reasonably if the database is slow or temporarily unavailable.
+- [ ] Third-party outages are handled gracefully with fallbacks or clear messaging.
+- [ ] The app can recover cleanly after a restart (no fragile in-memory state required).
+- [ ] Idempotency is considered for endpoints that might be retried by clients or workers.
+- [ ] Throttling or backpressure concepts exist to prevent overload cascades.
+
+---
+
+## 9. Frontend Reliability (Next.js + React)
+
+- [ ] Error boundaries are used for catching client-side render errors.
+- [ ] Suspense or loading states are implemented for async routes and data fetching.
+- [ ] Client-side state is resilient to transient API errors (retries, “try again” actions).
+- [ ] Next.js data fetching patterns (server actions, route handlers, etc.) follow current best practices.
+- [ ] Asset loading failures (images, fonts, etc.) do not break core UX.
+
+---
+
+## 10. Third-Party Dependencies & Integrations
+
+- [ ] Every critical integration (payments, auth, email, etc.) has:
+  - [ ] Clear error handling
+  - [ ] Reasonable timeouts
+  - [ ] A plan for partial or full outage
+- [ ] Webhook endpoints verify signatures or authenticity.
+- [ ] Integration changes are tested in sandbox environments where possible.
+- [ ] There is awareness of rate limits and backoff behaviors for each provider.
+
+---
+
+## 11. Backups, Recovery, and Disaster Preparedness
+
+- [ ] Regular backups are configured for the primary database.
+- [ ] Restore from backup has been tested at least once (not just assumed).
+- [ ] Critical configs and secrets can be restored in a new environment if needed.
+- [ ] There is at least a basic documented approach for:
+  - [ ] Full region/provider outage
+  - [ ] Data corruption
+  - [ ] Security incident affecting availability
+
+---
+
+## 12. Runbooks and Human Processes
+
+- [ ] Basic runbooks exist for:
+  - [ ] Handling elevated error rates
+  - [ ] Database issues (connection limits, slow queries)
+  - [ ] Third-party outages
+- [ ] It is clear where to look first when something breaks (logs, dashboards, specific tools).
+- [ ] Important links (monitoring, logs, dashboards) are documented in one place.
+- [ ] The team knows who is responsible for reacting to incidents in production (even if informal).
+
+---
+
+Use this file as a living document.  
+As reliability and SLAs become more formal, link out to detailed runbooks, incident templates, and specific SLO/SLI definitions.
