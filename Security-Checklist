@@ -1,0 +1,132 @@
+# SECURITY_CHECKLIST.md  
+Baseline security checklist for TypeScript + Next.js + PostgreSQL + Prisma SaaS apps.  
+Use this as a quick review before shipping or merging.
+
+---
+
+## 1. Application & API Surface
+
+- [ ] All API routes validate input (schema-based where possible: Zod, Yup, etc.).
+- [ ] API responses avoid leaking stack traces, internal IDs, or sensitive implementation details.
+- [ ] Error messages are helpful but not revealing (no raw SQL, tokens, or paths).
+- [ ] Rate limiting is applied on sensitive endpoints (auth, password reset, high-cost actions).
+- [ ] File upload endpoints restrict file type, size, and storage location.
+
+---
+
+## 2. Authentication & Sessions
+
+- [ ] Authentication is handled by a battle-tested library or well-reviewed pattern.
+- [ ] Passwords are never logged and always hashed using strong algorithms (e.g., bcrypt, argon2).
+- [ ] Session secrets and JWT signing keys are stored in env/secret manager, not in code.
+- [ ] Session expiration and refresh logic are clearly defined and enforced.
+- [ ] “Remember me” or long-lived tokens are deliberate, not accidental.
+- [ ] Logout properly invalidates sessions or tokens.
+
+---
+
+## 3. Authorization & Multi-Tenancy
+
+- [ ] Access checks are performed server-side for every sensitive operation.
+- [ ] Authorization logic is centralized or clearly structured (not scattered across the UI).
+- [ ] Tenant/organization scoping is enforced in queries (e.g., `WHERE orgId = currentOrgId`).
+- [ ] No cross-tenant data exposure via IDs, URLs, or filters.
+- [ ] Admin routes and features are clearly separated and guarded.
+
+---
+
+## 4. Data Handling & Database (PostgreSQL + Prisma)
+
+- [ ] No raw SQL with string interpolation; Prisma or parameterized queries are used.
+- [ ] Prisma schema reflects least-privilege and needed fields only.
+- [ ] Sensitive fields are minimized and justified (only what the product needs).
+- [ ] Data retention and deletion paths are considered (soft delete vs hard delete).
+- [ ] Indexes exist for high-traffic queries to reduce load and timeouts.
+- [ ] Database credentials are stored in env/secret manager, not in code or repo.
+
+---
+
+## 5. Secrets, Config, and Environment
+
+- [ ] No secrets, API keys, or passwords are committed to git history.
+- [ ] `.env` files are git-ignored and handled carefully in deployment pipelines.
+- [ ] Different environments (dev, staging, prod) use different secrets.
+- [ ] Third-party API keys use least privilege scopes.
+- [ ] Rotating secrets is feasible without major refactors.
+
+---
+
+## 6. Frontend & Browser-Side Security
+
+- [ ] No sensitive secrets are exposed to `NEXT_PUBLIC_*` env vars.
+- [ ] User input is properly escaped or sanitized where needed.
+- [ ] Dangerous HTML usage (`dangerouslySetInnerHTML`) is avoided or strictly controlled.
+- [ ] CSRF protections are in place where relevant (mutating operations, forms).
+- [ ] CORS configuration is restricted to trusted origins (not `*` in production).
+
+---
+
+## 7. Secure Defaults & Headers
+
+- [ ] Production deployment includes secure HTTP headers (via framework or middleware):
+  - [ ] Content Security Policy (CSP) tuned to real asset domains.
+  - [ ] X-Content-Type-Options set to `nosniff`.
+  - [ ] X-Frame-Options or frame-ancestors policy (to avoid clickjacking).
+  - [ ] Referrer-Policy set reasonably (e.g., `strict-origin-when-cross-origin`).
+  - [ ] Strict-Transport-Security (HSTS) enabled for HTTPS-only sites.
+- [ ] Cookies are set with appropriate flags (`Secure`, `HttpOnly`, `SameSite`).
+
+---
+
+## 8. Logging, Monitoring, and Auditability
+
+- [ ] Logs never include passwords, secrets, full tokens, or full card data.
+- [ ] Sensitive user data is either omitted or redacted in logs.
+- [ ] Security-relevant events are logged (logins, password reset requests, role changes, key actions).
+- [ ] There is a strategy to monitor errors and unusual activity (APM, alerting, dashboards).
+- [ ] Log retention policies exist and respect privacy/compliance needs.
+
+---
+
+## 9. Dependencies and Supply Chain
+
+- [ ] Dependencies are regularly checked for vulnerabilities (npm audit, Snyk, Dependabot, etc.).
+- [ ] Deprecated or unmaintained packages are identified and scheduled to be replaced.
+- [ ] Only necessary libraries are installed; no abandoned or random packages.
+- [ ] Build and deployment pipelines are restricted and protected (no public write access).
+
+---
+
+## 10. Infrastructure & Deployment
+
+- [ ] All external access uses HTTPS.
+- [ ] Public endpoints (load balancers, API gateways) are locked down to needed ports.
+- [ ] Access to production database and consoles is limited to authorized operators.
+- [ ] Backups are encrypted and tested (restore drills run at least occasionally).
+- [ ] Environment differences (dev/stage/prod) are clear and isolated.
+- [ ] There is a documented process for security patches and emergency fixes.
+
+---
+
+## 11. Availability, SLAs, and Reliability
+
+- [ ] Critical paths have clear fallback or graceful error handling.
+- [ ] Timeouts and retries are configured for outbound calls (no infinite hangs).
+- [ ] Idempotency is considered for operations that may be retried.
+- [ ] Health checks and readiness checks exist for deployments.
+- [ ] There is a basic incident response plan (who checks, where to look, how to communicate).
+
+---
+
+## 12. Team Practices & Reviews
+
+- [ ] Security is part of code review (not an afterthought).
+- [ ] New features mention security and data impact in PR descriptions when relevant.
+- [ ] Secrets and credentials are never shared in plain text in chat or tickets.
+- [ ] Access to admin tools and production is limited and auditable.
+- [ ] At least once in a while, someone walks through this checklist intentionally.
+
+---
+
+Use this file as a living document.  
+As the product matures, tighten items from “best effort” to “must have” and link out to more detailed policies or runbooks.
